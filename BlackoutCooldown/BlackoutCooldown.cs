@@ -10,8 +10,8 @@ namespace BlackoutCooldown
 
         public override string Name => "BlackoutCooldown";
         public override string Author => "Marco15453";
-        public override Version Version => new Version(1, 0, 0);
-        public override Version RequiredExiledVersion => new Version(2, 14, 0);
+        public override Version Version => new Version(1, 1, 0);
+        public override Version RequiredExiledVersion => new Version(3, 0, 0);
 
         public Dictionary<Player, DateTime> activeCooldowns = new Dictionary<Player, DateTime>();
 
