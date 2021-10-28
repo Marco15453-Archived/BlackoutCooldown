@@ -1,33 +1,40 @@
-﻿using Exiled.Events.EventArgs;
+﻿using Exiled.API.Features;
+using Exiled.Events.EventArgs;
 using MEC;
 using System;
+using System.Collections.Generic;
 
 namespace BlackoutCooldown
 {
     internal sealed class EventHandler
     {
+        public BlackoutCooldown plugin;
+        public EventHandler(BlackoutCooldown plugin) => this.plugin = plugin;
+
+        private Dictionary<Player, DateTime> activeCooldowns = new Dictionary<Player, DateTime>();
+
         public void onLockingDown(LockingDownEventArgs ev)
         {
-            if(BlackoutCooldown.Instance.activeCooldowns.ContainsKey(ev.Player))
+            if(activeCooldowns.ContainsKey(ev.Player))
             {
-                DateTime usableTime = BlackoutCooldown.Instance.activeCooldowns[ev.Player] + TimeSpan.FromSeconds(BlackoutCooldown.Instance.Config.BlackoutCooldown);
+                DateTime usableTime = activeCooldowns[ev.Player] + TimeSpan.FromSeconds(plugin.Config.BlackoutCooldown);
                 if (DateTime.Now > usableTime)
                 {
-                    BlackoutCooldown.Instance.activeCooldowns.Remove(ev.Player);
-                    if (BlackoutCooldown.Instance.Config.EnterBlackoutHintTime > 0)
-                        ev.Player.ShowHint(BlackoutCooldown.Instance.Config.EnterBlackoutHintMessage.Replace("%time%", BlackoutCooldown.Instance.Config.BlackoutCooldown.ToString()), BlackoutCooldown.Instance.Config.EnterBlackoutHintTime);
-                    BlackoutCooldown.Instance.activeCooldowns[ev.Player] = DateTime.Now;
+                    activeCooldowns.Remove(ev.Player);
+                    if (plugin.Config.EnterBlackoutHintTime > 0)
+                        ev.Player.ShowHint(plugin.Config.EnterBlackoutHintMessage.Replace("%time%", plugin.Config.BlackoutCooldown.ToString()), plugin.Config.EnterBlackoutHintTime);
+                    activeCooldowns[ev.Player] = DateTime.Now;
                     return;
                 }
-                if (BlackoutCooldown.Instance.Config.OnCooldownBlackoutHintTime > 0)
-                    ev.Player.ShowHint(BlackoutCooldown.Instance.Config.OnCooldownBlackoutHintMessage.Replace("%remaining%", Math.Round((usableTime - DateTime.Now).TotalSeconds, 2).ToString()), BlackoutCooldown.Instance.Config.OnCooldownBlackoutHintTime);
+                if (plugin.Config.OnCooldownBlackoutHintTime > 0)
+                    ev.Player.ShowHint(plugin.Config.OnCooldownBlackoutHintMessage.Replace("%remaining%", Math.Round((usableTime - DateTime.Now).TotalSeconds, 2).ToString()), plugin.Config.OnCooldownBlackoutHintTime);
                 ev.IsAllowed = false;
                 return;
             }
 
-            if (BlackoutCooldown.Instance.Config.EnterBlackoutHintTime > 0)
-                ev.Player.ShowHint(BlackoutCooldown.Instance.Config.EnterBlackoutHintMessage.Replace("%time%", BlackoutCooldown.Instance.Config.BlackoutCooldown.ToString()), BlackoutCooldown.Instance.Config.EnterBlackoutHintTime);
-            BlackoutCooldown.Instance.activeCooldowns[ev.Player] = DateTime.Now;
+            if (plugin.Config.EnterBlackoutHintTime > 0)
+                ev.Player.ShowHint(plugin.Config.EnterBlackoutHintMessage.Replace("%time%", plugin.Config.BlackoutCooldown.ToString()), plugin.Config.EnterBlackoutHintTime);
+            activeCooldowns[ev.Player] = DateTime.Now;
         }
     }
 }

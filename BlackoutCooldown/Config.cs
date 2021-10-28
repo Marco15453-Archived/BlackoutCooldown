@@ -8,9 +8,6 @@ namespace BlackoutCooldown
         [Description("Should the plugin be enabled?")]
         public bool IsEnabled { get; set; } = true;
 
-        [Description("Should the plugin automaticly update?")]
-        public bool AutoUpdate { get; set; } = true;
-
         [Description("Cooldown for SCP-079 Room Blackouts?")]
         public int BlackoutCooldown { get; set; } = 60;
 
