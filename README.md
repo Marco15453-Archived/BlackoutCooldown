@@ -1,3 +1,4 @@
+# **THIS PLUGIN HAS BEEN ARCHIVED**
 # BlackoutCooldown
 A simple plugin that adds an Cooldown for SCP-079 Room Blackout
 
